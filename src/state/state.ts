@@ -1,14 +1,17 @@
 import { CrumbsMap } from '../map/map';
 import { Positions } from '../positions/positions';
-import { CrumbPosition } from '../types';
+import { Crumb, CrumbPosition } from '../types';
 import { Direction } from '../movement/direction';
+import { isLetter } from '../utils/utils';
 
 export class State {
   constructor(
     private readonly crumbsMap: CrumbsMap,
     private readonly positionsVisited: Positions,
-    currentPosition: CrumbPosition,
-    currentDirection: Direction | undefined
+    public currentPosition: CrumbPosition,
+    public currentDirection: Direction | undefined,
+    private eatenCrumbs: string,
+    private crumbTrail: string
   ) {}
 
   static getInitialState(
@@ -16,10 +19,33 @@ export class State {
     startingPosition: CrumbPosition
   ): State {
     const visitedPositions: Positions = new Positions();
-    return new State(crumbsMap, visitedPositions, startingPosition, undefined);
+    return new State(
+      crumbsMap,
+      visitedPositions,
+      startingPosition,
+      undefined,
+      '',
+      ''
+    );
   }
 
   eatCrumbAtPosition(crumbPosition: CrumbPosition) {
-    console.log('I want to eat crumb at the position');
+    const crumb: Crumb = this.crumbsMap.getCrumbAtPosition(crumbPosition);
+    if (crumb === undefined) {
+      throw new Error(
+        `Nothing to eat at position: ${crumbPosition}! You made monster hangry!`
+      );
+    }
+
+    if (
+      isLetter(crumb) &&
+      !this.positionsVisited.wasPositionVisited(crumbPosition)
+    ) {
+      this.eatenCrumbs = this.eatenCrumbs.concat(crumb);
+    }
+    this.currentPosition = crumbPosition;
+    this.crumbTrail = this.crumbTrail.concat(crumb);
+    this.positionsVisited.visitPosition(crumbPosition);
+    return crumb;
   }
 }

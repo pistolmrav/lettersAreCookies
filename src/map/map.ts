@@ -48,4 +48,8 @@ export class CrumbsMap {
     ].charAt(crumbPositon.x);
     return isValidCrumb(crumbAtPosition);
   }
+
+  getCrumbAtPosition(crumbPosition: CrumbPosition): string | undefined {
+    return this.lines[crumbPosition.y]?.charAt(crumbPosition.x);
+  }
 }

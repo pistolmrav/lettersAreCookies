@@ -5,9 +5,7 @@ import { Direction } from './movement/direction';
 import { DIRECTION_UP } from './constants';
 
 export function startTheJourney(crumbsMap: CrumbsMap) {
-  console.log('Our cookie monster wakes up and wants to have breakfast.');
-  console.log(`Todays breakfast menu is: .${JSON.stringify(crumbsMap)}`);
-
+  // Todo handle case where multiple start symbols are found
   // Check if our breakfast has the complete meal
   const mapHasStartAndEnd: boolean = crumbsMap.checkIfMapHasStartAndEnd();
   if (!mapHasStartAndEnd) {
@@ -16,33 +14,76 @@ export function startTheJourney(crumbsMap: CrumbsMap) {
     );
   }
 
-  console.log('Menu is ok! Find the appetizer.');
   const startPosition: CrumbPosition = crumbsMap.findSpecificCrumbOnMap('@');
   console.log('Start position: ', startPosition);
+  console.log(
+    'Crumb at start position: ',
+    crumbsMap.getCrumbAtPosition(startPosition)
+  );
 
   // Initialize our state with startPosition and current map
-  const state: State = State.getInitialState(crumbsMap, startPosition);
+  let state: State = State.getInitialState(crumbsMap, startPosition);
+  console.log('Initial state: ', state);
   if (!state) {
     throw new Error(
       'Failed to generate initial state. Check if you have a proper startingPosition and crumbsMap'
     );
   }
-
-  console.log('Initial state: ', state);
-
-  console.log(
-    'Lets calculate all possible directions our monster can go from current position'
-  );
-
   // Make monster eat first crumb
+  state.eatCrumbAtPosition(startPosition);
 
-  const possibleDirections: Direction[] =
-    Direction.getAllDirectionsPossibleFromCurrentPosition(
+  let i = 0;
+  while (i < 50) {
+    i++;
+    const nextDirection: Direction | undefined = Direction.getNextDirection(
       crumbsMap,
-      startPosition
+      state,
+      []
     );
-  console.log('Possible directions: ', possibleDirections);
 
-  // Decide which position we should go
-  // First follow the -, then follow + or letter then follow pipe
+    if (!nextDirection) {
+      throw new Error('Error finding the path for monster to go.');
+    }
+
+    state.currentDirection = nextDirection;
+
+    const nextPosition: CrumbPosition = {
+      x: state.currentPosition.x + nextDirection.xCord,
+      y: state.currentPosition.y + nextDirection.yCord,
+    };
+
+    const eatenCrumb = state.eatCrumbAtPosition(nextPosition);
+    console.log('State: ', state);
+    if (eatenCrumb === 'x') {
+      return;
+    }
+  }
+  /*while (i < 9) {
+    i++;
+    const possibleDirections: Direction[] =
+      Direction.getAllDirectionsPossibleFromCurrentPosition(
+        crumbsMap,
+        startPosition
+      );
+    // Decide which position we should go
+    // First follow the -, then follow + or letter then follow pipe
+    // Make monster eat the second crumb
+    const nextDirection: Direction | undefined = Direction.getNextDirection(
+      crumbsMap,
+      state,
+      possibleDirections
+    );
+
+    if (!nextDirection) {
+      throw new Error('Error finding the path for monster to go.');
+    }
+
+    state.currentDirection = nextDirection;
+    const nextPosition: CrumbPosition = {
+      x: state.currentPosition.x + nextDirection.xCord,
+      y: state.currentPosition.y + nextDirection.yCord,
+    };
+
+    state.eatCrumbAtPosition(nextPosition);
+  }*/
 }

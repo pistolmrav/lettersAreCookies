@@ -4,7 +4,6 @@ export class Positions {
   visitedPositions: CrumbPosition[] = [];
 
   wasPositionVisited(currentPosition: CrumbPosition): boolean {
-    console.log(`Check if position ${currentPosition} was already visited`);
     const wasVisited = this.visitedPositions.filter((visitedPosition) => {
       return (
         visitedPosition.x === currentPosition.x &&

@@ -11,6 +11,7 @@ export type DirectionCordValue = -1 | 0 | 1;
 export interface NewPosition {
   directionKey: string;
   newPosition: CrumbPosition;
+  crumbAtNewPosition: Crumb;
 }
 
 export interface POSSIBLE_DIRECTIONS {

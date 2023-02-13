@@ -7,28 +7,8 @@ import { Direction } from './movement/direction';
 import { startTheJourney } from './journey';
 
 const exampleMaps: Array<string> = [
-  `  
-  @---A---+
-          |
-  x-B-+   C
-      |   |
-      +---+
-      `,
   `
-  @
-  | +-C--+
-  A |    |
-  +---B--+
-    |      x
-    |      |
-    +---D--+
-    `,
-  `
-  @---A---+
-          |
-  x-B-+   |
-      |   |
-      +---C
+  @-A-+-B-x
     `,
 ];
 
@@ -37,10 +17,10 @@ const parsedMap = CrumbsMap.createCrumbsMapFromInputString(exampleMaps[0]);
 const crumbsMap = new CrumbsMap([
   '  ',
   ' @---A---+',
-  ' S        |',
-  '  x-B-+   |',
-  '      |   |',
-  '      +---C',
+  ' |       |',
+  ' x-B-+   |',
+  '     |   |',
+  '     +---C',
 ]);
 // Todo 3. Find the start positions and get its coordinates
 //const start = mapa.findSpecificCrumbOnMap(START_SYMBOL);
@@ -50,7 +30,7 @@ const crumbsMap = new CrumbsMap([
 //console.log('Directions: ', directions);
 
 // Todo 4.5 Initialize our state so that our cookieMonster can have his breakfast - start the app
-startTheJourney(crumbsMap);
+startTheJourney(parsedMap);
 // Todo 5. Find possible directions to move to from our currentPosition
 //const possibleDirectionsToGoFromCurrentPosition =
 // Direction.getAllPositonsPossibleFromCurrentPosition(start);
