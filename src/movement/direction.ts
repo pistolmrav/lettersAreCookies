@@ -5,6 +5,7 @@ import {
   DIRECTION_RIGHT,
   DIRECTION_UP,
 } from '../constants';
+import { CrumbsMap } from '../map/map';
 
 export class Direction {
   static readonly POSSIBLE_DIRECTIONS = {
@@ -27,12 +28,29 @@ export class Direction {
     ];
   }
 
-  static getAllPositonsPossibleFromCurrentPosition(
+  static getAllDirectionsPossibleFromCurrentPosition(
+    crumbsMap: CrumbsMap,
     crumbPosition: CrumbPosition
   ): Direction[] {
     console.log('We are currently at this positions: ', crumbPosition);
     console.log('Check which positions we can move to');
     // We can move to every positions that has a valid crumb on it except we can't move backwards
+    // Direction is valid if the crumb on the newPosition is a valid crumb
+    const allDirections: Direction[] = this.getDirections();
+    const newPositions: CrumbPosition[] = allDirections.map((direction) => {
+      console.log('directrion:', direction);
+      return {
+        x: crumbPosition.x + direction.xCord,
+        y: crumbPosition.y + direction.yCord,
+      };
+    });
+
+    const validNewPositions: CrumbPosition[] = newPositions.filter(
+      (crumbPosition) => {
+        return crumbsMap.isMapPositionValid(crumbPosition);
+      }
+    );
+    console.log('New positions possible: ', validNewPositions);
 
     return [this.POSSIBLE_DIRECTIONS[DIRECTION_DOWN]];
   }

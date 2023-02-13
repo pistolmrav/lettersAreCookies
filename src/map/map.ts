@@ -1,5 +1,6 @@
 import { CrumbPosition } from '../types';
 import { END_SYMBOL, START_SYMBOL } from '../constants';
+import { isValidCrumb } from '../utils/utils';
 
 export class CrumbsMap {
   constructor(private readonly lines: Array<string>) {}
@@ -39,5 +40,12 @@ export class CrumbsMap {
     const end: CrumbPosition = this.findSpecificCrumbOnMap(END_SYMBOL);
 
     return !(!start || !end);
+  }
+
+  isMapPositionValid(crumbPositon: CrumbPosition): boolean {
+    const crumbAtPosition: string | undefined = this.lines[
+      crumbPositon.y
+    ].charAt(crumbPositon.x);
+    return isValidCrumb(crumbAtPosition);
   }
 }

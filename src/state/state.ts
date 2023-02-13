@@ -8,6 +8,14 @@ export class State {
     private readonly crumbsMap: CrumbsMap,
     private readonly positionsVisited: Positions,
     currentPosition: CrumbPosition,
-    currentDirection: Direction
+    currentDirection: Direction | undefined
   ) {}
+
+  static getInitialState(
+    crumbsMap: CrumbsMap,
+    startingPosition: CrumbPosition
+  ): State {
+    const visitedPositions: Positions = new Positions();
+    return new State(crumbsMap, visitedPositions, startingPosition, undefined);
+  }
 }
