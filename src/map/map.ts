@@ -9,7 +9,7 @@ export class CrumbsMap {
   }
 
   findSpecificCrumbOnMap(crumbSymbol: string): CrumbPosition {
-    // Map through all the lines and find the exact symbol his coords are x: character position in line, y: index of line in array
+    // Map through all the lines and find the exact symbol his coords are x: character positions in line, y: index of line in array
     const crumbPosition: CrumbPosition | undefined = this.lines.reduce(
       (acc: CrumbPosition | undefined, curr: string, currentIndex) => {
         if (curr.includes(crumbSymbol)) {

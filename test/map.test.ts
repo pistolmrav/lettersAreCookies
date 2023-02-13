@@ -1,7 +1,7 @@
 import { CrumbsMap } from '../src/map/map';
 import { CrumbPosition } from '../src/types';
 
-describe('findExactCrumb should return exact crumb position and return it as CrumbPosition', () => {
+describe('findExactCrumb should return exact crumb positions and return it as CrumbPosition', () => {
   const validMaps = [
     {
       lines: [

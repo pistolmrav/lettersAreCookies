@@ -1,4 +1,4 @@
-import { DirectionCordValue } from '../types';
+import { CrumbPosition, DirectionCordValue } from '../types';
 import {
   DIRECTION_DOWN,
   DIRECTION_LEFT,
@@ -19,6 +19,21 @@ export class Direction {
   ) {}
 
   static getDirections() {
-    return this.POSSIBLE_DIRECTIONS;
+    return [
+      this.POSSIBLE_DIRECTIONS[DIRECTION_UP],
+      this.POSSIBLE_DIRECTIONS[DIRECTION_DOWN],
+      this.POSSIBLE_DIRECTIONS[DIRECTION_LEFT],
+      this.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+    ];
+  }
+
+  static getAllPositonsPossibleFromCurrentPosition(
+    crumbPosition: CrumbPosition
+  ): Direction[] {
+    console.log('We are currently at this positions: ', crumbPosition);
+    console.log('Check which positions we can move to');
+    // We can move to every positions that has a valid crumb on it except we can't move backwards
+
+    return [this.POSSIBLE_DIRECTIONS[DIRECTION_DOWN]];
   }
 }
