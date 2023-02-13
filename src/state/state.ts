@@ -18,4 +18,8 @@ export class State {
     const visitedPositions: Positions = new Positions();
     return new State(crumbsMap, visitedPositions, startingPosition, undefined);
   }
+
+  eatCrumbAtPosition(crumbPosition: CrumbPosition) {
+    console.log('I want to eat crumb at the position');
+  }
 }

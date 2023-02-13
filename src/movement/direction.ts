@@ -1,4 +1,10 @@
-import { CrumbPosition, DirectionCordValue } from '../types';
+import {
+  Crumb,
+  CrumbPosition,
+  DirectionCordValue,
+  NewPosition,
+  POSSIBLE_DIRECTIONS,
+} from '../types';
 import {
   DIRECTION_DOWN,
   DIRECTION_LEFT,
@@ -8,50 +14,51 @@ import {
 import { CrumbsMap } from '../map/map';
 
 export class Direction {
-  static readonly POSSIBLE_DIRECTIONS = {
-    [DIRECTION_UP]: new Direction(0, -1),
-    [DIRECTION_DOWN]: new Direction(0, 1),
-    [DIRECTION_LEFT]: new Direction(-1, 0),
-    [DIRECTION_RIGHT]: new Direction(1, 0),
+  static readonly POSSIBLE_DIRECTIONS: POSSIBLE_DIRECTIONS = {
+    UP: new Direction(0, -1),
+    DOWN: new Direction(0, 1),
+    LEFT: new Direction(-1, 0),
+    RIGHT: new Direction(1, 0),
   };
   constructor(
     private readonly xCord: DirectionCordValue,
     private readonly yCord: DirectionCordValue
   ) {}
 
-  static getDirections() {
-    return [
-      this.POSSIBLE_DIRECTIONS[DIRECTION_UP],
-      this.POSSIBLE_DIRECTIONS[DIRECTION_DOWN],
-      this.POSSIBLE_DIRECTIONS[DIRECTION_LEFT],
-      this.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
-    ];
+  static getMappedDirections(): Map<string, Direction> {
+    return new Map<string, Direction>()
+      .set(DIRECTION_UP, this.POSSIBLE_DIRECTIONS[DIRECTION_UP])
+      .set(DIRECTION_DOWN, this.POSSIBLE_DIRECTIONS[DIRECTION_DOWN])
+      .set(DIRECTION_LEFT, this.POSSIBLE_DIRECTIONS[DIRECTION_LEFT])
+      .set(DIRECTION_RIGHT, this.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT]);
   }
 
   static getAllDirectionsPossibleFromCurrentPosition(
     crumbsMap: CrumbsMap,
     crumbPosition: CrumbPosition
   ): Direction[] {
-    console.log('We are currently at this positions: ', crumbPosition);
-    console.log('Check which positions we can move to');
     // We can move to every positions that has a valid crumb on it except we can't move backwards
     // Direction is valid if the crumb on the newPosition is a valid crumb
-    const allDirections: Direction[] = this.getDirections();
-    const newPositions: CrumbPosition[] = allDirections.map((direction) => {
-      console.log('directrion:', direction);
-      return {
-        x: crumbPosition.x + direction.xCord,
-        y: crumbPosition.y + direction.yCord,
-      };
+    let newPositions: NewPosition[] = [];
+    const allDirections: Map<string, Direction> = this.getMappedDirections();
+    allDirections.forEach((direction, key) => {
+      newPositions.push({
+        directionKey: key,
+        newPosition: {
+          x: crumbPosition.x + direction.xCord,
+          y: crumbPosition.y + direction.yCord,
+        } as CrumbPosition,
+      });
     });
 
-    const validNewPositions: CrumbPosition[] = newPositions.filter(
-      (crumbPosition) => {
-        return crumbsMap.isMapPositionValid(crumbPosition);
+    const validNewPositions: NewPosition[] = newPositions.filter(
+      (newPosition) => {
+        return crumbsMap.isMapPositionValid(newPosition.newPosition);
       }
     );
-    console.log('New positions possible: ', validNewPositions);
 
-    return [this.POSSIBLE_DIRECTIONS[DIRECTION_DOWN]];
+    return validNewPositions.map((pos) => {
+      return this.POSSIBLE_DIRECTIONS[pos.directionKey];
+    });
   }
 }

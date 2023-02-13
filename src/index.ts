@@ -37,7 +37,7 @@ const parsedMap = CrumbsMap.createCrumbsMapFromInputString(exampleMaps[0]);
 const crumbsMap = new CrumbsMap([
   '  ',
   ' @---A---+',
-  '          |',
+  ' S        |',
   '  x-B-+   |',
   '      |   |',
   '      +---C',

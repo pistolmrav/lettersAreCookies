@@ -33,10 +33,16 @@ export function startTheJourney(crumbsMap: CrumbsMap) {
   console.log(
     'Lets calculate all possible directions our monster can go from current position'
   );
+
+  // Make monster eat first crumb
+
   const possibleDirections: Direction[] =
     Direction.getAllDirectionsPossibleFromCurrentPosition(
       crumbsMap,
       startPosition
     );
   console.log('Possible directions: ', possibleDirections);
+
+  // Decide which position we should go
+  // First follow the -, then follow + or letter then follow pipe
 }
