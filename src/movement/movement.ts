@@ -1,4 +1,7 @@
 export class Movement {
-    constructor() {
-    }
+  constructor() {}
+}
+
+class Direction {
+  constructor() {}
 }

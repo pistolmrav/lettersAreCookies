@@ -1,4 +1,5 @@
 import { CrumbPosition } from '../types';
+import { END_SYMBOL, START_SYMBOL } from '../constants';
 
 export class CrumbsMap {
   constructor(private readonly lines: Array<string>) {}
@@ -7,11 +8,10 @@ export class CrumbsMap {
     return new CrumbsMap(inputString.split('\n'));
   }
 
-  findSpecificCrumbOnMap(crumbSymbol: string): CrumbPosition | undefined {
+  findSpecificCrumbOnMap(crumbSymbol: string): CrumbPosition {
     // Map through all the lines and find the exact symbol his coords are x: character position in line, y: index of line in array
     const crumbPosition: CrumbPosition | undefined = this.lines.reduce(
       (acc: CrumbPosition | undefined, curr: string, currentIndex) => {
-        console.log('Curr: ', curr);
         if (curr.includes(crumbSymbol)) {
           return {
             ...acc,
@@ -31,5 +31,13 @@ export class CrumbsMap {
     }
 
     return crumbPosition;
+  }
+
+  // Todo not sure if we gonna need this function we'll see later on
+  checkIfMapHasStartAndEnd(): boolean {
+    const start: CrumbPosition = this.findSpecificCrumbOnMap(START_SYMBOL);
+    const end: CrumbPosition = this.findSpecificCrumbOnMap(END_SYMBOL);
+
+    return !(!start || !end);
   }
 }

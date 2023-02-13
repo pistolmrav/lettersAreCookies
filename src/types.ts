@@ -4,3 +4,4 @@ export interface CrumbPosition {
   x: number; // Horizontal
   y: number; // Vertical
 }
+export type DirectionCordValue = -1 | 0 | 1;
