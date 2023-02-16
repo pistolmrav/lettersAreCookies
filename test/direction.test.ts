@@ -1,4 +1,4 @@
-import { Direction } from '../src/movement/direction';
+import { Direction } from '../src/direction/direction';
 import {
   DIRECTION_DOWN,
   DIRECTION_LEFT,
@@ -70,3 +70,5 @@ describe(`isOppositeDirection should return true if given direction is opposite 
     });
   });
 });
+
+describe(`getNextPosition should return the next crumb position based on currentDirection and possible filteredDirections`, () => {});

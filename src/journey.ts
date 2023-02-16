@@ -1,15 +1,17 @@
 import { CrumbsMap } from './map/map';
 import { CrumbPosition } from './types';
 import { State } from './state/state';
-import { Direction } from './movement/direction';
+import { Direction } from './direction/direction';
 import { askQuestion, isLetter, printIntro } from './utils/utils';
 import chalk from 'chalk';
-import { START_SYMBOL } from './constants';
+import { END_SYMBOL, START_SYMBOL } from './constants';
 
 export async function startTheJourney(crumbsMap: CrumbsMap) {
   console.clear();
   await askQuestion('Ready to feed the monster? [Enter to continue]:');
   printIntro();
+  // Todo check if there are multiple starting points
+  // Todo check if there is no end point
   const startPosition: CrumbPosition =
     crumbsMap.findSpecificCrumbOnMap(START_SYMBOL);
 
@@ -43,6 +45,8 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
   );
 
   while (true) {
+    // Todo check if there is multiple possible ways to go
+    // Todo check if there is fork in the way and there are two possible ways to go
     const nextDirection: Direction | undefined = Direction.getNextDirection(
       crumbsMap,
       state

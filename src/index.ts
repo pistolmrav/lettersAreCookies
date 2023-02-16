@@ -3,14 +3,11 @@ import { startTheJourney } from './journey';
 
 const exampleMaps: Array<string> = [
   `
-     +-O-N-+
-     |     |
-     |   +-I-+
- @-G-O-+ | | |
-     | | +-+ E
-     +-+     S
-             |
-             x
+   @--A---+
+          |
+    B-+   C
+      |   |
+      +---+
     `,
 ];
 

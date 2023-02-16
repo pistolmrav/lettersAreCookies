@@ -1,5 +1,6 @@
 import { CrumbPosition } from '../types';
-import { isValidCrumb } from '../utils/utils';
+import { checkMultipleSymbolsInLine, isValidCrumb } from '../utils/utils';
+import { START_SYMBOL } from '../constants';
 
 export class CrumbsMap {
   constructor(private readonly lines: Array<string>) {}
@@ -22,8 +23,17 @@ export class CrumbsMap {
       const errorMsg =
         linesWithCrumbFiltered.length === 0
           ? 'Cookie monster could not find the crumb on the map!'
-          : 'Cookie monster found more than one starting crumb on the map!';
+          : 'Cookie monster found more than one startingsss crumb on the map!';
       throw new Error(errorMsg);
+    }
+
+    if (
+      crumbSymbol === START_SYMBOL &&
+      checkMultipleSymbolsInLine(crumbSymbol, linesWithCrumbFiltered[0].line)
+    ) {
+      throw new Error(
+        'Cookie monster found more than one starting crumb on the map!'
+      );
     }
 
     return {

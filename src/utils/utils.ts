@@ -45,3 +45,16 @@ export function printIntro() {
   );
   console.log('--------------------------------------------------');
 }
+
+export function checkMultipleSymbolsInLine(symbol: string, line: string) {
+  let count = 0;
+  for (let i = 0; i < line.length; i++) {
+    if (line[i] === symbol) {
+      count++;
+      if (count > 1) {
+        return true;
+      }
+    }
+  }
+  return false;
+}

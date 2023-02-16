@@ -1,7 +1,7 @@
 import { CrumbsMap } from '../map/map';
 import { Positions } from '../positions/positions';
 import { Crumb, CrumbPosition } from '../types';
-import { Direction } from '../movement/direction';
+import { Direction } from '../direction/direction';
 import { isLetter } from '../utils/utils';
 
 export class State {

@@ -1,4 +1,4 @@
-import { Direction } from './movement/direction';
+import { Direction } from './direction/direction';
 
 export type Crumb = string | undefined; // Crumb can either be a letter, symbol or empty
 

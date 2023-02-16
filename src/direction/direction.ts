@@ -1,5 +1,4 @@
 import {
-  Crumb,
   CrumbPosition,
   DirectionCordValue,
   POSSIBLE_DIRECTIONS,
