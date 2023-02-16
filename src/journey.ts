@@ -21,15 +21,6 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
     )
   );
   console.log('--------------------------------------------------');
-
-  // Todo handle case where multiple start symbols are found
-  const mapHasStartAndEnd: boolean = crumbsMap.checkIfMapHasStartAndEnd();
-  if (!mapHasStartAndEnd) {
-    throw new Error(
-      'The menu isnt what the monster wanted. Please supply correct map.'
-    );
-  }
-
   const startPosition: CrumbPosition =
     crumbsMap.findSpecificCrumbOnMap(START_SYMBOL);
   console.clear();

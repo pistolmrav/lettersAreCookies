@@ -1,5 +1,4 @@
 import { CrumbPosition } from '../types';
-import { END_SYMBOL, START_SYMBOL } from '../constants';
 import { isValidCrumb } from '../utils/utils';
 
 export class CrumbsMap {
@@ -14,37 +13,28 @@ export class CrumbsMap {
    * @param crumbSymbol
    */
   findSpecificCrumbOnMap(crumbSymbol: string): CrumbPosition {
-    // Todo refactor this to use map instead of reduce
     // Map through all the lines and find the exact symbol his coords are x: character positions in line, y: index of line in array
-    const crumbPosition: CrumbPosition | undefined = this.lines.reduce(
-      (acc: CrumbPosition | undefined, curr: string, currentIndex) => {
-        if (curr.includes(crumbSymbol)) {
-          return {
-            ...acc,
-            x: curr.indexOf(crumbSymbol),
-            y: currentIndex,
-          } as CrumbPosition;
-        }
+    const linesWithCrumb = this.lines.map((line, lineIndex) => ({
+      line,
+      lineIndex,
+    }));
 
-        return acc;
-      },
-
-      undefined
+    const linesWithCrumbFiltered = linesWithCrumb.filter(({ line }) =>
+      line.includes(crumbSymbol)
     );
 
-    if (!crumbPosition) {
-      throw new Error('Cookie monster could not find the crumb on the map!');
+    if (linesWithCrumbFiltered.length !== 1) {
+      const errorMsg =
+        linesWithCrumbFiltered.length === 0
+          ? 'Cookie monster could not find the crumb on the map!'
+          : 'Cookie monster found more than one starting crumb on the map!';
+      throw new Error(errorMsg);
     }
 
-    return crumbPosition;
-  }
-
-  // Todo not sure if we gonna need this function we'll see later on
-  checkIfMapHasStartAndEnd(): boolean {
-    const start: CrumbPosition = this.findSpecificCrumbOnMap(START_SYMBOL);
-    const end: CrumbPosition = this.findSpecificCrumbOnMap(END_SYMBOL);
-
-    return !(!start || !end);
+    return {
+      x: linesWithCrumbFiltered[0].line.indexOf(crumbSymbol),
+      y: linesWithCrumbFiltered[0].lineIndex,
+    } as CrumbPosition;
   }
 
   isMapPositionValid(crumbPositon: CrumbPosition): boolean {

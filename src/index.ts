@@ -8,7 +8,7 @@ import { startTheJourney } from './journey';
 
 const exampleMaps: Array<string> = [
   `
-     +-O-N-+
+     +-O@N-+
      |     |
      |   +-I-+
  @-G-O-+ | | |
@@ -25,7 +25,7 @@ const crumbsMap = new CrumbsMap([
   '  ',
   ' @---A---+',
   ' |       |',
-  ' x-B-+   |',
+  ' x-B@+   |',
   '     |   |',
   '     +---C',
 ]);
