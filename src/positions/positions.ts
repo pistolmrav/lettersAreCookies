@@ -11,17 +11,7 @@ export class Positions {
       );
     });
 
-    if (wasVisited.length) {
-      console.log(
-        'Check completed the position was visited: ',
-        wasVisited.length,
-        ' times'
-      );
-      return true;
-    }
-
-    console.log('Check completed, the position wasnt visited yet.');
-    return false;
+    return !!wasVisited.length;
   }
 
   visitPosition(position: CrumbPosition) {

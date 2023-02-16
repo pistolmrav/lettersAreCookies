@@ -77,17 +77,11 @@ export class Direction {
 
   static getNextDirection(
     crumbsMap: CrumbsMap,
-    currentState: State,
-    possibleDirections: Direction[]
+    currentState: State
   ): Direction | undefined {
-    console.log('Current direction: ', currentState.currentDirection);
     const currentDirection: Direction | undefined =
       currentState.currentDirection;
     const currentPosition: CrumbPosition = currentState.currentPosition;
-    const allDirections: Direction[] = this.getAllDirections();
-    const validDirections: Direction[] = allDirections.filter(
-      (dir) => !this.isOppositeDirection(currentDirection, dir)
-    );
     let analyzedDirections: any = [];
     const mappedDirections: Map<string, Direction> = this.getMappedDirections();
     mappedDirections.forEach((direction, directionKey) => {
@@ -119,68 +113,30 @@ export class Direction {
       }
     );
 
-    console.log('Filtered directions: ', filteredDirections);
     if (filteredDirections.length === 1) {
       return filteredDirections[0].direction;
     }
 
-    console.log(
-      'Current symbol: ',
-      crumbsMap.getCrumbAtPosition(currentPosition)
-    );
-
     const nextPosition: any = filteredDirections.reduce(
       (acc: any, curr: any) => {
         if (!currentDirection && isValidCrumb(curr.crumbAtNewPosition)) {
-          console.log('1');
           return curr;
         }
 
         if (curr.direction === currentDirection) {
-          console.log('2');
           return curr;
         }
 
         if (acc.direction !== currentDirection) {
-          console.log('3');
           return acc;
         }
 
-        console.log('4');
         return acc;
       },
       {}
     );
 
-    console.log('Next position', nextPosition);
     return nextPosition.direction;
-    /*const currentPosition: CrumbPosition = currentState.currentPosition;
-    const currentDirection: Direction | undefined =
-      currentState.currentDirection;
-    // Check each possible direction and decide where to go next
-    const possible = possibleDirections
-      .filter(
-        (possibleDirection) =>
-          !this.isOppositeDirection(currentDirection, possibleDirection)
-      )
-      .find((possibleDirection) => {
-        const possiblePosition: CrumbPosition = {
-          x: currentPosition.x + possibleDirection.xCord,
-          y: currentPosition.y + possibleDirection.yCord,
-        };
-        const crumbAtPossiblePosition: Crumb =
-          crumbsMap.getCrumbAtPosition(possiblePosition);
-        if (
-          crumbAtPossiblePosition === '+' ||
-          isLetter(crumbAtPossiblePosition)
-        ) {
-          console.log('I can make a turn');
-        }
-
-        return isValidCrumb(crumbAtPossiblePosition);
-      });
-
-    return possible;*/
   }
 
   private static oppositeDirections = new Map<Direction, Direction>()

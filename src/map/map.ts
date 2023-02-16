@@ -9,7 +9,12 @@ export class CrumbsMap {
     return new CrumbsMap(inputString.split('\n'));
   }
 
+  /**
+   *
+   * @param crumbSymbol
+   */
   findSpecificCrumbOnMap(crumbSymbol: string): CrumbPosition {
+    // Todo refactor this to use map instead of reduce
     // Map through all the lines and find the exact symbol his coords are x: character positions in line, y: index of line in array
     const crumbPosition: CrumbPosition | undefined = this.lines.reduce(
       (acc: CrumbPosition | undefined, curr: string, currentIndex) => {

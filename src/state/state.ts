@@ -10,8 +10,8 @@ export class State {
     private readonly positionsVisited: Positions,
     public currentPosition: CrumbPosition,
     public currentDirection: Direction | undefined,
-    private eatenCrumbs: string,
-    private crumbTrail: string
+    public eatenCrumbs: string,
+    public crumbTrail: string
   ) {}
 
   static getInitialState(

@@ -17,7 +17,9 @@
     "noUnusedParameters": false,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
-    "strictPropertyInitialization": true
+    "strictPropertyInitialization": true,
+    "sourceMap": true,
+
   },
   "include": [
     "src/**/*.ts"
