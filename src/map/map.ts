@@ -1,4 +1,4 @@
-import { CrumbPosition } from '../types';
+import { Crumb, CrumbPosition } from '../types';
 import { isValidCrumb } from '../utils/utils';
 
 export class CrumbsMap {
@@ -8,12 +8,7 @@ export class CrumbsMap {
     return new CrumbsMap(inputString.split('\n'));
   }
 
-  /**
-   *
-   * @param crumbSymbol
-   */
   findSpecificCrumbOnMap(crumbSymbol: string): CrumbPosition {
-    // Map through all the lines and find the exact symbol his coords are x: character positions in line, y: index of line in array
     const linesWithCrumb = this.lines.map((line, lineIndex) => ({
       line,
       lineIndex,

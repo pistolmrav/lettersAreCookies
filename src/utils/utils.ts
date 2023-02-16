@@ -1,6 +1,6 @@
 import { Crumb } from '../types';
 import readline from 'readline';
-
+import chalk from 'chalk';
 export function isValidCrumb(crumb: Crumb): boolean {
   return crumb !== undefined && crumb !== ' ' && !!crumb.match(/[A-Z+-|]/);
 }
@@ -29,4 +29,19 @@ export function askQuestion(query: any) {
       resolve(ans);
     })
   );
+}
+
+export function printIntro() {
+  console.clear();
+  console.log('--------------------------------------------------');
+  console.log(
+    chalk.red.bold('Monster woke up and felt crumbling in his tummy :(')
+  );
+  console.log('--------------------------------------------------');
+  console.log(
+    chalk.yellow.bold(
+      'But since you are a good fella you leave crumb trail for the monster so he can get to his breakfast.'
+    )
+  );
+  console.log('--------------------------------------------------');
 }

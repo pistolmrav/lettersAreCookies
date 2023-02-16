@@ -2,28 +2,16 @@ import { CrumbsMap } from './map/map';
 import { CrumbPosition } from './types';
 import { State } from './state/state';
 import { Direction } from './movement/direction';
-import { askQuestion, isLetter } from './utils/utils';
+import { askQuestion, isLetter, printIntro } from './utils/utils';
 import chalk from 'chalk';
 import { START_SYMBOL } from './constants';
 
 export async function startTheJourney(crumbsMap: CrumbsMap) {
   console.clear();
-  await askQuestion('Ready to feed the monster? [any key to continue]:');
-  console.clear();
-  console.log('--------------------------------------------------');
-  console.log(
-    chalk.red.bold('Monster woke up and felt crumbling in his tummy :(')
-  );
-  console.log('--------------------------------------------------');
-  console.log(
-    chalk.yellow.bold(
-      'But since you are a good fella you leave crumb trail for the monster so he can get to his breakfast.'
-    )
-  );
-  console.log('--------------------------------------------------');
+  await askQuestion('Ready to feed the monster? [Enter to continue]:');
+  printIntro();
   const startPosition: CrumbPosition =
     crumbsMap.findSpecificCrumbOnMap(START_SYMBOL);
-  console.clear();
 
   console.log(
     chalk.green.bold(
@@ -45,7 +33,7 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
   await askQuestion(
     `Eat the crumb at position: ${JSON.stringify(
       startPosition
-    )} - [Press any key to eat]`
+    )} - [Enter to eat]`
   );
 
   console.log(
@@ -82,9 +70,8 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
 
     if (eatenCrumb === 'x') {
       console.log(
-        chalk.green.bold.bgGray(
-          `FINNALY! The monster got to his breakfast. This is the path it took: ${state.crumbTrail}`
-        )
+        'FINNALY! The monster got to his breakfast. This is the path it took: ' +
+          chalk.green.bold.bgGray(state.crumbTrail)
       );
       console.log(
         'And he filled his belly with these delicious crumbs:',
