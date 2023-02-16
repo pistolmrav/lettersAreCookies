@@ -1,4 +1,4 @@
-import { Crumb, CrumbPosition } from '../types';
+import { CrumbPosition } from '../types';
 import { isValidCrumb } from '../utils/utils';
 
 export class CrumbsMap {

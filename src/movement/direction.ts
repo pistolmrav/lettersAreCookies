@@ -15,16 +15,18 @@ import { State } from '../state/state';
 import { isValidCrumb } from '../utils/utils';
 
 export class Direction {
+  constructor(
+    public readonly xCord: DirectionCordValue,
+    public readonly yCord: DirectionCordValue
+  ) {}
+
   static readonly POSSIBLE_DIRECTIONS: POSSIBLE_DIRECTIONS = {
     UP: new Direction(0, -1),
     DOWN: new Direction(0, 1),
     LEFT: new Direction(-1, 0),
     RIGHT: new Direction(1, 0),
   };
-  constructor(
-    public readonly xCord: DirectionCordValue,
-    public readonly yCord: DirectionCordValue
-  ) {}
+
   static getMappedDirections(): Map<string, Direction> {
     return new Map<string, Direction>()
       .set(DIRECTION_UP, this.POSSIBLE_DIRECTIONS[DIRECTION_UP])
@@ -33,68 +35,100 @@ export class Direction {
       .set(DIRECTION_RIGHT, this.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT]);
   }
 
+  // Todo - refactor this method
   static getNextDirection(
     crumbsMap: CrumbsMap,
     currentState: State
   ): Direction | undefined {
-    const currentDirection: Direction | undefined =
-      currentState.currentDirection;
-    const currentPosition: CrumbPosition = currentState.currentPosition;
-    let analyzedDirections: any = [];
-    const mappedDirections: Map<string, Direction> = this.getMappedDirections();
-    mappedDirections.forEach((direction, directionKey) => {
-      if (!this.isOppositeDirection(currentDirection, direction)) {
-        const newPosition: CrumbPosition = {
-          x: currentPosition.x + direction.xCord,
-          y: currentPosition.y + direction.yCord,
-        };
-        const crumbAtNewPosition: Crumb =
-          crumbsMap.getCrumbAtPosition(newPosition);
-        analyzedDirections.push({
-          directionKey: directionKey,
-          newPosition: newPosition,
-          crumbAtNewPosition: crumbAtNewPosition,
-          direction: direction,
-        });
-      }
-    });
+    const { currentDirection, currentPosition } = currentState;
+    const analyzedDirections = this.getAnalyzedDirections(
+      crumbsMap,
+      currentDirection,
+      currentPosition
+    );
 
-    const filteredDirections: Array<any> = analyzedDirections.filter(
-      (analyzedDirections: any) => {
-        return (
-          isValidCrumb(analyzedDirections.crumbAtNewPosition) &&
-          !(
-            currentDirection === analyzedDirections.direction &&
-            crumbsMap.getCrumbAtPosition(currentPosition) === '+'
-          )
-        );
-      }
+    const filteredDirections: any = this.filterValidDirections(
+      currentDirection,
+      currentPosition,
+      analyzedDirections,
+      crumbsMap
     );
 
     if (filteredDirections.length === 1) {
       return filteredDirections[0].direction;
     }
 
-    const nextPosition: any = filteredDirections.reduce(
-      (acc: any, curr: any) => {
-        if (!currentDirection && isValidCrumb(curr.crumbAtNewPosition)) {
-          return curr;
-        }
-
-        if (curr.direction === currentDirection) {
-          return curr;
-        }
-
-        if (acc.direction !== currentDirection) {
-          return acc;
-        }
-
-        return acc;
-      },
-      {}
+    const nextPosition = this.getNextPosition(
+      currentDirection,
+      filteredDirections
     );
 
     return nextPosition.direction;
+  }
+
+  private static getAnalyzedDirections(
+    crumbsMap: CrumbsMap,
+    currentDirection: Direction | undefined,
+    currentPosition: CrumbPosition
+  ): any {
+    const mappedDirections: Map<string, Direction> = this.getMappedDirections();
+    const analyzedDirections: any = [];
+
+    mappedDirections.forEach((direction, directionKey) => {
+      if (!this.isOppositeDirection(currentDirection, direction)) {
+        const newPosition: CrumbPosition = {
+          x: currentPosition.x + direction.xCord,
+          y: currentPosition.y + direction.yCord,
+        };
+
+        const crumbAtNewPosition = crumbsMap.getCrumbAtPosition(newPosition);
+
+        analyzedDirections.push({
+          directionKey,
+          newPosition,
+          crumbAtNewPosition,
+          direction,
+        });
+      }
+    });
+
+    return analyzedDirections;
+  }
+
+  private static filterValidDirections(
+    currentDirection: Direction | undefined,
+    currentPosition: CrumbPosition,
+    analyzedDirections: any,
+    crumbsMap: CrumbsMap
+  ): any {
+    return analyzedDirections.filter(
+      ({ crumbAtNewPosition, direction }: any) =>
+        isValidCrumb(crumbAtNewPosition) &&
+        !(
+          currentDirection === direction &&
+          crumbsMap.getCrumbAtPosition(currentPosition) === '+'
+        )
+    );
+  }
+
+  static getNextPosition(
+    currentDirection: Direction | undefined,
+    filteredDirections: any
+  ): any {
+    return filteredDirections.reduce((acc: any, curr: any) => {
+      const accDirection = acc.direction ?? acc.crumbAtNewPosition;
+      const currDirection = curr.direction ?? curr.crumbAtNewPosition;
+
+      if (currDirection === currentDirection) {
+        return curr;
+      }
+
+      if (accDirection !== currentDirection) {
+        return acc;
+      }
+
+      return acc;
+    });
   }
 
   private static oppositeDirections = new Map<Direction, Direction>()
@@ -115,7 +149,7 @@ export class Direction {
       this.POSSIBLE_DIRECTIONS[DIRECTION_LEFT]
     );
 
-  private static isOppositeDirection(
+  static isOppositeDirection(
     previousDirection: Direction | undefined,
     direction: Direction
   ) {
@@ -123,6 +157,6 @@ export class Direction {
       return false;
     }
 
-    return this.oppositeDirections.get(previousDirection) === direction;
+    return Direction.oppositeDirections.get(previousDirection) === direction;
   }
 }
