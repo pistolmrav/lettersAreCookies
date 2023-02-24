@@ -45,7 +45,6 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
 
   while (true) {
     // Todo check if there is multiple possible ways to go
-    // Todo check if there is fork in the way and there are two possible ways to go
     const nextDirection: Direction | undefined = Direction.getNextDirection(
       crumbsMap,
       state

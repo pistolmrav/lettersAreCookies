@@ -1,4 +1,5 @@
 import {
+  Crumb,
   CrumbPosition,
   DirectionCordValue,
   POSSIBLE_DIRECTIONS,
@@ -8,6 +9,7 @@ import {
   DIRECTION_LEFT,
   DIRECTION_RIGHT,
   DIRECTION_UP,
+  START_SYMBOL,
 } from '../constants';
 import { CrumbsMap } from '../map/map';
 import { State } from '../state/state';
@@ -40,6 +42,9 @@ export class Direction {
     currentState: State
   ): Direction | undefined {
     const { currentDirection, currentPosition } = currentState;
+    const crumbAtCurrentPosition: Crumb =
+      crumbsMap.getCrumbAtPosition(currentPosition);
+
     const analyzedDirections = this.getAnalyzedDirections(
       crumbsMap,
       currentDirection,
@@ -53,8 +58,28 @@ export class Direction {
       crumbsMap
     );
 
+    if (filteredDirections.length === 0 && crumbAtCurrentPosition === '+') {
+      throw new Error("Fake turn. Monster can't go anywhere.");
+    }
+    if (filteredDirections.length === 0) {
+      throw new Error("Broken path. Monster can't go anywhere.");
+    }
+
     if (filteredDirections.length === 1) {
       return filteredDirections[0].direction;
+    }
+
+    if (
+      filteredDirections.length > 1 &&
+      crumbAtCurrentPosition === START_SYMBOL
+    ) {
+      throw new Error(
+        'Multiple starting paths. The monster cant decide where to go'
+      );
+    }
+
+    if (filteredDirections.length > 1 && crumbAtCurrentPosition === '+') {
+      throw new Error('Fork in path');
     }
 
     const nextPosition = this.getNextPosition(
@@ -115,14 +140,11 @@ export class Direction {
     filteredDirections: any
   ): any {
     return filteredDirections.reduce((acc: any, curr: any) => {
-      const accDirection = acc.direction ?? acc.crumbAtNewPosition;
-      const currDirection = curr.direction ?? curr.crumbAtNewPosition;
-
-      if (currDirection === currentDirection) {
+      if (curr.direction === currentDirection) {
         return curr;
       }
 
-      if (accDirection !== currentDirection) {
+      if (acc.direction !== currentDirection) {
         return acc;
       }
 
