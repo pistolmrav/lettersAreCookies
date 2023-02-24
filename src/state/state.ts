@@ -31,7 +31,7 @@ export class State {
 
   eatCrumbAtPosition(crumbPosition: CrumbPosition) {
     const crumb: Crumb = this.crumbsMap.getCrumbAtPosition(crumbPosition);
-    if (crumb === undefined) {
+    if (crumb === ' ' || crumb === undefined) {
       throw new Error(
         `Nothing to eat at position: ${crumbPosition}! You made monster hangry!`
       );
