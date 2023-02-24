@@ -2,13 +2,12 @@ import { CrumbsMap } from './map/map';
 import { CrumbPosition } from './types';
 import { State } from './state/state';
 import { Direction } from './direction/direction';
-import { askQuestion, isLetter, printIntro } from './utils/utils';
+import { isLetter, printIntro } from './utils/utils';
 import chalk from 'chalk';
 import { END_SYMBOL, START_SYMBOL } from './constants';
 
-export async function startTheJourney(crumbsMap: CrumbsMap) {
+export function startTheJourney(crumbsMap: CrumbsMap) {
   console.clear();
-  await askQuestion('Ready to feed the monster? [Enter to continue]:');
   printIntro();
   const startPosition: CrumbPosition = crumbsMap.findStartingPosition();
   crumbsMap.checkIfEndSymbolExists();
@@ -28,12 +27,6 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
     );
   }
 
-  // Make monster eat first crumb
-  await askQuestion(
-    `Eat the crumb at position: ${JSON.stringify(
-      startPosition
-    )} - [Enter to eat]`
-  );
   state.eatCrumbAtPosition(startPosition);
 
   console.log(
@@ -41,8 +34,8 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
       `Crumb: ${crumbsMap.getCrumbAtPosition(startPosition)} eaten`
     )
   );
-
-  while (true) {
+  let shouldContinue = true;
+  while (shouldContinue) {
     const nextDirection: Direction | undefined = Direction.getNextDirection(
       crumbsMap,
       state
@@ -77,7 +70,9 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
         'And he filled his belly with these delicious crumbs:',
         chalk.green.bold.bgGray(state.eatenCrumbs)
       );
-      return;
+      shouldContinue = false;
     }
   }
+
+  return state;
 }
