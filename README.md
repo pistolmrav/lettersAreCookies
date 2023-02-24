@@ -1,3 +1,21 @@
+## Software Sauna Code Challenge - Solution "Letters are cookies :)"
+
+This is my solution to the Software Sauna Code Challenge. The challenge is described in the README.md file
+
+I've built the app using typescript on node version 18.14.0
+- for testing I've used jest
+- for linting I've used eslint
+- for formatting I've used prettier
+- for type checking I've used typescript
+
+### Running the app
+1) Make sure you run yarn install to install all the dependencies / npm install
+2) run yarn dev to start the app in development mode
+3) run yarn build to build the app
+4) run yarn start to start the app in production mode
+5) run yarn test to run the tests
+
+
 # [Software Sauna](https://www.softwaresauna.com/) Code Challenge
 
 Follow a path of characters & collect letters:
