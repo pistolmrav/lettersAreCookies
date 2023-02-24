@@ -54,10 +54,10 @@ export class CrumbsMap {
     };
   }
 
-  isMapPositionValid(crumbPositon: CrumbPosition): boolean {
+  isMapPositionValid(crumbPosition: CrumbPosition): boolean {
     const crumbAtPosition: string | undefined = this.lines[
-      crumbPositon.y
-    ].charAt(crumbPositon.x);
+      crumbPosition.y
+    ].charAt(crumbPosition.x);
     return isValidCrumb(crumbAtPosition);
   }
 
