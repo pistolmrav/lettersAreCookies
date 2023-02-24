@@ -1,6 +1,7 @@
 import { Crumb } from '../types';
 import readline from 'readline';
 import chalk from 'chalk';
+
 export function isValidCrumb(crumb: Crumb): boolean {
   return crumb !== undefined && crumb !== ' ' && !!crumb.match(/[A-Z+-|]/);
 }

@@ -1,7 +1,7 @@
 import { CrumbPosition } from '../types';
 
 export class Positions {
-  visitedPositions: CrumbPosition[] = [];
+  constructor(public visitedPositions: CrumbPosition[] = []) {}
 
   wasPositionVisited(currentPosition: CrumbPosition): boolean {
     const wasVisited = this.visitedPositions.filter((visitedPosition) => {

@@ -10,7 +10,6 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
   console.clear();
   await askQuestion('Ready to feed the monster? [Enter to continue]:');
   printIntro();
-  // Todo check if there is no end point
   const startPosition: CrumbPosition = crumbsMap.findStartingPosition();
   crumbsMap.checkIfEndSymbolExists();
 
@@ -28,14 +27,14 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
       'Failed to generate initial state. Check if you have a proper startingPosition and crumbsMap'
     );
   }
-  // Make monster eat first crumb
-  state.eatCrumbAtPosition(startPosition);
 
+  // Make monster eat first crumb
   await askQuestion(
     `Eat the crumb at position: ${JSON.stringify(
       startPosition
     )} - [Enter to eat]`
   );
+  state.eatCrumbAtPosition(startPosition);
 
   console.log(
     chalk.yellow.bold(
@@ -44,7 +43,6 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
   );
 
   while (true) {
-    // Todo check if there is multiple possible ways to go
     const nextDirection: Direction | undefined = Direction.getNextDirection(
       crumbsMap,
       state

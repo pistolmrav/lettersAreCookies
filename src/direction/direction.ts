@@ -1,4 +1,5 @@
 import {
+  AnalyzedDirection,
   Crumb,
   CrumbPosition,
   DirectionCordValue,
@@ -36,7 +37,6 @@ export class Direction {
       .set(DIRECTION_RIGHT, this.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT]);
   }
 
-  // Todo - refactor this method
   static getNextDirection(
     crumbsMap: CrumbsMap,
     currentState: State
@@ -45,13 +45,15 @@ export class Direction {
     const crumbAtCurrentPosition: Crumb =
       crumbsMap.getCrumbAtPosition(currentPosition);
 
-    const analyzedDirections = this.getAnalyzedDirections(
+    // Analize all possible directions
+    const analyzedDirections: AnalyzedDirection[] = this.getAnalyzedDirections(
       crumbsMap,
       currentDirection,
       currentPosition
     );
 
-    const filteredDirections: any = this.filterValidDirections(
+    // Filter out invalid directions
+    const filteredDirections: AnalyzedDirection[] = this.filterValidDirections(
       currentDirection,
       currentPosition,
       analyzedDirections,
@@ -82,6 +84,7 @@ export class Direction {
       throw new Error('Fork in path');
     }
 
+    // Continue straight or make a turn
     const nextPosition = this.getNextPosition(
       currentDirection,
       filteredDirections
@@ -90,13 +93,13 @@ export class Direction {
     return nextPosition.direction;
   }
 
-  private static getAnalyzedDirections(
+  public static getAnalyzedDirections(
     crumbsMap: CrumbsMap,
     currentDirection: Direction | undefined,
     currentPosition: CrumbPosition
-  ): any {
+  ): AnalyzedDirection[] {
     const mappedDirections: Map<string, Direction> = this.getMappedDirections();
-    const analyzedDirections: any = [];
+    const analyzedDirections: AnalyzedDirection[] = [];
 
     mappedDirections.forEach((direction, directionKey) => {
       if (!this.isOppositeDirection(currentDirection, direction)) {
@@ -122,11 +125,11 @@ export class Direction {
   private static filterValidDirections(
     currentDirection: Direction | undefined,
     currentPosition: CrumbPosition,
-    analyzedDirections: any,
+    analyzedDirections: AnalyzedDirection[],
     crumbsMap: CrumbsMap
-  ): any {
+  ): AnalyzedDirection[] {
     return analyzedDirections.filter(
-      ({ crumbAtNewPosition, direction }: any) =>
+      ({ crumbAtNewPosition, direction }: AnalyzedDirection) =>
         isValidCrumb(crumbAtNewPosition) &&
         !(
           currentDirection === direction &&
@@ -137,19 +140,21 @@ export class Direction {
 
   static getNextPosition(
     currentDirection: Direction | undefined,
-    filteredDirections: any
-  ): any {
-    return filteredDirections.reduce((acc: any, curr: any) => {
-      if (curr.direction === currentDirection) {
-        return curr;
-      }
+    filteredDirections: AnalyzedDirection[]
+  ): AnalyzedDirection {
+    return filteredDirections.reduce(
+      (acc: AnalyzedDirection, curr: AnalyzedDirection) => {
+        if (curr.direction === currentDirection) {
+          return curr;
+        }
 
-      if (acc.direction !== currentDirection) {
+        if (acc.direction !== currentDirection) {
+          return acc;
+        }
+
         return acc;
       }
-
-      return acc;
-    });
+    );
   }
 
   private static oppositeDirections = new Map<Direction, Direction>()

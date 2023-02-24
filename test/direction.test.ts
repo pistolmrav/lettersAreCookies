@@ -5,6 +5,10 @@ import {
   DIRECTION_RIGHT,
   DIRECTION_UP,
 } from '../src/constants';
+import { CrumbsMap } from '../src/map/map';
+import { State } from '../src/state/state';
+import { CrumbPosition } from '../src/types';
+import { Positions } from '../src/positions/positions';
 describe(`isOppositeDirection should return true if given direction is opposite to current direction`, () => {
   const validDirections = [
     {
@@ -71,4 +75,229 @@ describe(`isOppositeDirection should return true if given direction is opposite 
   });
 });
 
-describe(`getNextPosition should return the next crumb position based on currentDirection and possible filteredDirections`, () => {});
+describe('getNextDirection should return valid next direction or throw error', () => {
+  const testData = [
+    {
+      map: `
+        x-B
+          |
+   @--A---+
+          |
+     x+   C
+      |   |
+      +---+
+    `,
+      currentPosition: { x: 3, y: 3 } as CrumbPosition,
+      positionsVisited: new Positions(),
+      currentDirection: undefined,
+      eatenCrumbs: '',
+      crumbTrail: '@',
+      expectedDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+    },
+    {
+      map: `
+        x-B
+          |
+   @--A---+
+          |
+     x+   C
+      |   |
+      +---+
+    `,
+      currentPosition: { x: 4, y: 3 } as CrumbPosition,
+      positionsVisited: new Positions([{ x: 3, y: 3 }]),
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+      eatenCrumbs: '',
+      crumbTrail: '@-',
+      expectedDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+    },
+    {
+      map: `
+        x-B
+          |
+   @--A---+
+          |
+     x+   C
+      |   |
+      +---+
+    `,
+      currentPosition: { x: 5, y: 3 } as CrumbPosition,
+      positionsVisited: new Positions([
+        { x: 3, y: 3 },
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+      ]),
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+      eatenCrumbs: '',
+      crumbTrail: '@--',
+      expectedDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+    },
+    {
+      map: `
+        x-B
+          |
+   @--A---+
+          |
+     x+   C
+      |   |
+      +---+
+    `,
+      currentPosition: { x: 6, y: 3 } as CrumbPosition,
+      positionsVisited: new Positions([
+        { x: 3, y: 3 },
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+        { x: 6, y: 3 },
+      ]),
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+      eatenCrumbs: 'A',
+      crumbTrail: '@--A',
+      expectedDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+    },
+    {
+      map: `
+        x-B
+          |
+   @--A---+
+          |
+     x+   C
+      |   |
+      +---+
+    `,
+      currentPosition: { x: 10, y: 3 } as CrumbPosition,
+      positionsVisited: new Positions([
+        { x: 3, y: 3 },
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+        { x: 6, y: 3 },
+        { x: 7, y: 3 },
+        { x: 8, y: 3 },
+        { x: 9, y: 3 },
+        { x: 10, y: 3 },
+      ]),
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+      eatenCrumbs: 'A',
+      crumbTrail: '@--A---+',
+      expectedDirection: undefined,
+    },
+    {
+      map: `
+     +-L-+
+     |  +A-+
+    @B+ ++ H
+     ++    x
+    `,
+      currentPosition: { x: 5, y: 3 } as CrumbPosition,
+      positionsVisited: new Positions([
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+      ]),
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+      eatenCrumbs: 'B',
+      crumbTrail: '@B',
+      expectedDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+    },
+    {
+      map: `
+     +-L-+
+     |  +A-+
+    @B+ ++ H
+     ++    x
+    `,
+      currentPosition: { x: 6, y: 3 } as CrumbPosition,
+      positionsVisited: new Positions([
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+        { x: 6, y: 3 },
+      ]),
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+      eatenCrumbs: 'B',
+      crumbTrail: '@B+',
+      expectedDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_DOWN],
+    },
+    {
+      map: `
+     +-L-+
+     |  +A-+
+    @B+ ++ H
+     ++    x
+    `,
+      currentPosition: { x: 6, y: 4 } as CrumbPosition,
+      positionsVisited: new Positions([
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+        { x: 6, y: 3 },
+        { x: 6, y: 4 },
+      ]),
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_DOWN],
+      eatenCrumbs: 'B',
+      crumbTrail: '@B++',
+      expectedDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_LEFT],
+    },
+    {
+      map: `
+     +-L-+
+     |  +A-+
+    @B+ ++ H
+     ++    x
+    `,
+      currentPosition: { x: 5, y: 4 } as CrumbPosition,
+      positionsVisited: new Positions([
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+        { x: 6, y: 3 },
+        { x: 6, y: 4 },
+        { x: 5, y: 4 },
+      ]),
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_LEFT],
+      eatenCrumbs: 'B',
+      crumbTrail: '@B++',
+      expectedDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_UP],
+    },
+    {
+      map: `
+   @--A-+
+        |
+         
+        B-x
+    `,
+      currentPosition: { x: 8, y: 2 } as CrumbPosition,
+      positionsVisited: new Positions([
+        { x: 3, y: 1 },
+        { x: 4, y: 1 },
+        { x: 5, y: 1 },
+        { x: 6, y: 1 },
+        { x: 7, y: 1 },
+        { x: 8, y: 1 },
+        { x: 8, y: 2 },
+      ]),
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_DOWN],
+      eatenCrumbs: 'A',
+      crumbTrail: '@--A-+|',
+      expectedDirection: undefined,
+    },
+  ];
+
+  testData.map((data) => {
+    it('should return valid next direction', () => {
+      const workMap = CrumbsMap.createCrumbsMapFromInputString(data.map);
+      const workState = new State(
+        workMap,
+        data.positionsVisited,
+        data.currentPosition,
+        data.currentDirection,
+        data.eatenCrumbs,
+        data.crumbTrail
+      );
+      if (!data.expectedDirection) {
+        expect(() => Direction.getNextDirection(workMap, workState)).toThrow();
+      } else {
+        expect(Direction.getNextDirection(workMap, workState)).toBe(
+          data.expectedDirection
+        );
+      }
+    });
+  });
+});
+
+describe(`getAnalyzedDirection should return a list of directions with additional information`, () => {});

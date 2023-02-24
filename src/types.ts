@@ -8,12 +8,13 @@ export interface CrumbPosition {
 }
 export type DirectionCordValue = -1 | 0 | 1;
 
-export interface NewPosition {
+export interface POSSIBLE_DIRECTIONS {
+  [key: string]: Direction;
+}
+
+export interface AnalyzedDirection {
   directionKey: string;
   newPosition: CrumbPosition;
   crumbAtNewPosition: Crumb;
-}
-
-export interface POSSIBLE_DIRECTIONS {
-  [key: string]: Direction;
+  direction: Direction;
 }
