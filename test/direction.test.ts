@@ -300,4 +300,121 @@ describe('getNextDirection should return valid next direction or throw error', (
   });
 });
 
-describe(`getAnalyzedDirection should return a list of directions with additional information`, () => {});
+describe(`getAnalyzedDirection should return a list of directions with additional information`, () => {
+  const testData = [
+    {
+      map: `
+        x-B
+          |
+   @--A---+
+          |
+     x+   C
+      |   |
+      +---+
+      `,
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+      currentPosition: { x: 7, y: 3 },
+      expectedDirections: [
+        {
+          directionKey: DIRECTION_UP,
+          newPosition: { x: 7, y: 2 },
+          crumbAtNewPosition: ' ',
+          direction: Direction.POSSIBLE_DIRECTIONS[DIRECTION_UP],
+        },
+        {
+          directionKey: DIRECTION_DOWN,
+          newPosition: { x: 7, y: 4 },
+          crumbAtNewPosition: ' ',
+          direction: Direction.POSSIBLE_DIRECTIONS[DIRECTION_DOWN],
+        },
+        {
+          directionKey: DIRECTION_RIGHT,
+          newPosition: { x: 8, y: 3 },
+          crumbAtNewPosition: '-',
+          direction: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+        },
+      ],
+    },
+    {
+      map: `
+     +-O-N-+
+     |     |
+     |   +-I-+
+ @-G-O-+ | | |
+     | | +-+ E
+     +-+     S
+             |
+             x
+      `,
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+      currentPosition: { x: 5, y: 4 },
+      expectedDirections: [
+        {
+          directionKey: DIRECTION_UP,
+          newPosition: { x: 5, y: 3 },
+          crumbAtNewPosition: '|',
+          direction: Direction.POSSIBLE_DIRECTIONS[DIRECTION_UP],
+        },
+        {
+          directionKey: DIRECTION_DOWN,
+          newPosition: { x: 5, y: 5 },
+          crumbAtNewPosition: '|',
+          direction: Direction.POSSIBLE_DIRECTIONS[DIRECTION_DOWN],
+        },
+        {
+          directionKey: DIRECTION_RIGHT,
+          newPosition: { x: 6, y: 4 },
+          crumbAtNewPosition: '-',
+          direction: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+        },
+      ],
+    },
+    {
+      map: `
+     +-O-N-+
+     |     |
+     |   +-I-+
+ @-G-O-+ | | |
+     | | +-+ E
+     +-+     S
+             |
+             x
+      `,
+      currentDirection: Direction.POSSIBLE_DIRECTIONS[DIRECTION_UP],
+      currentPosition: { x: 5, y: 4 },
+      expectedDirections: [
+        {
+          directionKey: DIRECTION_UP,
+          newPosition: { x: 5, y: 3 },
+          crumbAtNewPosition: '|',
+          direction: Direction.POSSIBLE_DIRECTIONS[DIRECTION_UP],
+        },
+        {
+          directionKey: DIRECTION_LEFT,
+          newPosition: { x: 4, y: 4 },
+          crumbAtNewPosition: '-',
+          direction: Direction.POSSIBLE_DIRECTIONS[DIRECTION_LEFT],
+        },
+        {
+          directionKey: DIRECTION_RIGHT,
+          newPosition: { x: 6, y: 4 },
+          crumbAtNewPosition: '-',
+          direction: Direction.POSSIBLE_DIRECTIONS[DIRECTION_RIGHT],
+        },
+      ],
+    },
+  ];
+
+  testData.map((data) => {
+    const workMap = CrumbsMap.createCrumbsMapFromInputString(data.map);
+    it('should return analyzed directions list', () => {
+      expect(
+        Direction.getAnalyzedDirections(
+          workMap,
+          data.currentDirection,
+          data.currentPosition
+        )
+      ).toEqual(data.expectedDirections);
+    });
+  });
+});

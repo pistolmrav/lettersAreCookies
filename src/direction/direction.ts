@@ -84,13 +84,12 @@ export class Direction {
       throw new Error('Fork in path');
     }
 
-    // Continue straight or make a turn
-    const nextPosition = this.getNextPosition(
-      currentDirection,
-      filteredDirections
-    );
+    const nexDirection =
+      filteredDirections.find(
+        (direction) => direction.direction === currentDirection
+      ) || filteredDirections[0];
 
-    return nextPosition.direction;
+    return nexDirection.direction;
   }
 
   public static getAnalyzedDirections(
@@ -135,25 +134,6 @@ export class Direction {
           currentDirection === direction &&
           crumbsMap.getCrumbAtPosition(currentPosition) === '+'
         )
-    );
-  }
-
-  static getNextPosition(
-    currentDirection: Direction | undefined,
-    filteredDirections: AnalyzedDirection[]
-  ): AnalyzedDirection {
-    return filteredDirections.reduce(
-      (acc: AnalyzedDirection, curr: AnalyzedDirection) => {
-        if (curr.direction === currentDirection) {
-          return curr;
-        }
-
-        if (acc.direction !== currentDirection) {
-          return acc;
-        }
-
-        return acc;
-      }
     );
   }
 
