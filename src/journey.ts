@@ -10,10 +10,9 @@ export async function startTheJourney(crumbsMap: CrumbsMap) {
   console.clear();
   await askQuestion('Ready to feed the monster? [Enter to continue]:');
   printIntro();
-  // Todo check if there are multiple starting points
   // Todo check if there is no end point
-  const startPosition: CrumbPosition =
-    crumbsMap.findSpecificCrumbOnMap(START_SYMBOL);
+  const startPosition: CrumbPosition = crumbsMap.findStartingPosition();
+  crumbsMap.checkIfEndSymbolExists();
 
   console.log(
     chalk.green.bold(
