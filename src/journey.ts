@@ -4,7 +4,10 @@ import { State } from './state/state';
 import { Direction } from './direction/direction';
 import { isLetter, printIntro } from './utils/utils';
 import chalk from 'chalk';
-import { END_SYMBOL, START_SYMBOL } from './constants';
+import {
+  FAILED_TO_GENERATE_INITIAL_STATE_ERROR,
+  NO_NEXT_DIRECTION_ERROR,
+} from './constants';
 
 export function startTheJourney(crumbsMap: CrumbsMap) {
   console.clear();
@@ -22,9 +25,7 @@ export function startTheJourney(crumbsMap: CrumbsMap) {
   // Initialize our state with startPosition and current map
   let state: State = State.getInitialState(crumbsMap, startPosition);
   if (!state) {
-    throw new Error(
-      'Failed to generate initial state. Check if you have a proper startingPosition and crumbsMap'
-    );
+    throw new Error(FAILED_TO_GENERATE_INITIAL_STATE_ERROR);
   }
 
   state.eatCrumbAtPosition(startPosition);
@@ -42,7 +43,7 @@ export function startTheJourney(crumbsMap: CrumbsMap) {
     );
 
     if (!nextDirection) {
-      throw new Error('Error finding the path for monster to go.');
+      throw new Error(NO_NEXT_DIRECTION_ERROR);
     }
 
     state.currentDirection = nextDirection;

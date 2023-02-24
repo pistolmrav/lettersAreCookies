@@ -3,6 +3,7 @@ import { Positions } from '../positions/positions';
 import { Crumb, CrumbPosition } from '../types';
 import { Direction } from '../direction/direction';
 import { isLetter } from '../utils/utils';
+import { NOTHING_TO_EAT_ERROR } from '../constants';
 
 export class State {
   constructor(
@@ -32,9 +33,7 @@ export class State {
   eatCrumbAtPosition(crumbPosition: CrumbPosition) {
     const crumb: Crumb = this.crumbsMap.getCrumbAtPosition(crumbPosition);
     if (crumb === ' ' || crumb === undefined) {
-      throw new Error(
-        `Nothing to eat at position: ${crumbPosition}! You made monster hangry!`
-      );
+      throw new Error(NOTHING_TO_EAT_ERROR(crumbPosition));
     }
 
     if (

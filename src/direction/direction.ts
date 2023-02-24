@@ -6,10 +6,14 @@ import {
   POSSIBLE_DIRECTIONS,
 } from '../types';
 import {
+  BROKEN_PATH_ERROR,
   DIRECTION_DOWN,
   DIRECTION_LEFT,
   DIRECTION_RIGHT,
   DIRECTION_UP,
+  FAKE_TURN_ERROR,
+  FORK_IN_PATH_ERROR,
+  MULTIPLE_STARTING_PATHS_ERROR,
   START_SYMBOL,
 } from '../constants';
 import { CrumbsMap } from '../map/map';
@@ -61,10 +65,10 @@ export class Direction {
     );
 
     if (filteredDirections.length === 0 && crumbAtCurrentPosition === '+') {
-      throw new Error("Fake turn. Monster can't go anywhere.");
+      throw new Error(FAKE_TURN_ERROR);
     }
     if (filteredDirections.length === 0) {
-      throw new Error("Broken path. Monster can't go anywhere.");
+      throw new Error(BROKEN_PATH_ERROR);
     }
 
     if (filteredDirections.length === 1) {
@@ -75,13 +79,11 @@ export class Direction {
       filteredDirections.length > 1 &&
       crumbAtCurrentPosition === START_SYMBOL
     ) {
-      throw new Error(
-        'Multiple starting paths. The monster cant decide where to go'
-      );
+      throw new Error(MULTIPLE_STARTING_PATHS_ERROR);
     }
 
     if (filteredDirections.length > 1 && crumbAtCurrentPosition === '+') {
-      throw new Error('Fork in path');
+      throw new Error(FORK_IN_PATH_ERROR);
     }
 
     const nexDirection =
